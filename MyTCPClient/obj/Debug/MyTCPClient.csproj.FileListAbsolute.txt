@@ -1,0 +1,7 @@
+C:\Users\Sofi\source\repos\TCPServer\MyTCPClient\bin\Debug\MyTCPClient.exe.config
+C:\Users\Sofi\source\repos\TCPServer\MyTCPClient\bin\Debug\MyTCPClient.exe
+C:\Users\Sofi\source\repos\TCPServer\MyTCPClient\bin\Debug\MyTCPClient.pdb
+C:\Users\Sofi\source\repos\TCPServer\MyTCPClient\obj\Debug\MyTCPClient.csproj.CoreCompileInputs.cache
+C:\Users\Sofi\source\repos\TCPServer\MyTCPClient\obj\Debug\MyTCPClient.exe
+C:\Users\Sofi\source\repos\TCPServer\MyTCPClient\obj\Debug\MyTCPClient.pdb
+C:\Users\Sofi\source\repos\TCPServer\MyTCPClient\obj\Debug\MyTCPClient.csprojResolveAssemblyReference.cache
