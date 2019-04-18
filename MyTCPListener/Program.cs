@@ -1,64 +1,94 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MyTCPListener
 {
     class Program
     {
+        private static TcpListener server = null;
+        private static List<TcpClient> clientList = new List<TcpClient>();
+        private static byte[] bytes = new byte[256];
+        private static string data = null;
+        private static int port = 1020;
+        private static IPAddress localAddress = IPAddress.Parse("127.0.0.1");
+
         static void Main(string[] args)
         {
-            TcpListener server = null;
-
             try
             {
-                var port = 1020;
-                IPAddress localAddress = IPAddress.Parse("127.0.0.1");
                 server = new TcpListener(localAddress, port);
                 server.Start();
-
-                byte[] bytes = new byte[256];
-                string data = null;
+                Console.WriteLine("Waiting for connection...");
 
                 while (true)
                 {
-                    Console.WriteLine("Waiting for connection...");
                     TcpClient client = server.AcceptTcpClient();
-                    Console.WriteLine("Connected!");
-
-                    data = null;
-
-                    NetworkStream stream = client.GetStream();
-
-                    int i;
-
-                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        data = Encoding.UTF8.GetString(bytes, 0, i);
-                        Console.WriteLine(data);
-
-                        byte[] message = Encoding.UTF8.GetBytes(data);
-
-                        stream.Write(message, 0, message.Length);
-                    }
-
-                    client.Close();
+                    clientList.Add(client);
+                    Thread thread = new Thread(Listener);
+                    thread.Start(client);
+                    
+                    Console.WriteLine("Client Connected!");
                 }
             }
             catch (SocketException e)
             {
                 Console.WriteLine($"SocketException: {e}");
             }
-            finally
+            catch (IOException e)
             {
-                server.Stop();
+                Console.WriteLine($"IOException: {e}");
             }
 
             Console.WriteLine("Hit enter to continue...");
+        }
+
+        public static void Listener(object obj)
+        {
+            try
+            {
+                TcpClient client = (TcpClient)obj;
+                NetworkStream stream = client.GetStream();
+
+                while (true)
+                {
+                    int counter = stream.Read(bytes, 0, bytes.Length);
+                    if (counter == 0)
+                    {
+                        clientList.Remove(client);
+                        break;
+                    }
+
+                    data = Encoding.UTF8.GetString(bytes, 0, counter).TrimEnd('\0');
+                    BroadCast(data, client);
+                    Console.WriteLine(data);
+                }
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("Client Disconnected.");
+            }
+        }
+        public static void BroadCast(string data, TcpClient currentClient)
+        {
+            string message;
+            foreach (TcpClient client in clientList)
+            {
+                NetworkStream stream = client.GetStream();
+
+                if (client != currentClient)
+                {
+                    message = $"Friend: {data}";
+                    byte[] buffer = Encoding.UTF8.GetBytes(message);
+                    stream.Write(buffer, 0, buffer.Length);
+                }
+            }
         }
     }
 }
