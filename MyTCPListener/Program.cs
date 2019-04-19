@@ -47,11 +47,11 @@ namespace MyTCPListener
 
         public static void Listener(object obj)
         {
+            TcpClient client = (TcpClient)obj;
+            NetworkStream stream = client.GetStream();
+
             try
             {
-                TcpClient client = (TcpClient)obj;
-                NetworkStream stream = client.GetStream();
-
                 while (true)
                 {
                     int counter = stream.Read(bytes, 0, bytes.Length);
@@ -63,12 +63,14 @@ namespace MyTCPListener
                     }
 
                     data = Encoding.UTF8.GetString(bytes, 0, counter).TrimEnd('\0');
+
                     BroadCast(data, client);
                     Console.WriteLine(data);
                 }
         }
             catch (Exception)
             {
+                clientList.Remove(client);
                 Console.WriteLine("Client Disconnected.");
             }
 }
@@ -78,13 +80,6 @@ namespace MyTCPListener
 
             try
             {
-                var rudePeople = clientList.Where(c => c.Connected == false);
-
-                foreach (var rudeClient in rudePeople)
-                {
-                    clientList.Remove(rudeClient);
-                }
-
                 foreach (TcpClient client in clientList)
                 {
                     NetworkStream stream = client.GetStream();

@@ -75,7 +75,7 @@ namespace MyTCPClient
                         Console.WriteLine(message);
                 }
             }
-            catch (IOException)
+            catch (Exception)
             {
                 Console.WriteLine("Disconnected.");
             }
