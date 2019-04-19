@@ -77,9 +77,7 @@ namespace MyTCPListener
         public static void BroadCast(string data, TcpClient currentClient)
         {
             string message;
-
-            try
-            {
+            
                 foreach (TcpClient client in clientList)
                 {
                     NetworkStream stream = client.GetStream();
@@ -90,10 +88,6 @@ namespace MyTCPListener
                         stream.Write(buffer, 0, buffer.Length);
                     }
                 }
-            }
-            catch(Exception)
-            {
-                Console.WriteLine("No other clients...");
             }
         }
     }
