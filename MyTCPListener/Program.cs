@@ -37,13 +37,9 @@ namespace MyTCPListener
                     Console.WriteLine("Client Connected!");
                 }
             }
-            catch (SocketException e)
+            catch (Exception)
             {
-                Console.WriteLine($"SocketException: {e}");
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine($"IOException: {e}");
+                Console.WriteLine("Client Disconnected.");
             }
 
             Console.WriteLine("Hit enter to continue...");
@@ -69,25 +65,38 @@ namespace MyTCPListener
                     BroadCast(data, client);
                     Console.WriteLine(data);
                 }
-            }
-            catch (IOException)
+        }
+            catch (Exception)
             {
                 Console.WriteLine("Client Disconnected.");
             }
-        }
+}
         public static void BroadCast(string data, TcpClient currentClient)
         {
             string message;
-            foreach (TcpClient client in clientList)
-            {
-                NetworkStream stream = client.GetStream();
 
-                if (client != currentClient)
+            try
+            {
+            var rudePeople = clientList.Where(c => c.Connected == false);
+
+            foreach (var rudeClient in rudePeople)
+            {
+                clientList.Remove(rudeClient);
+            }
+                foreach (TcpClient client in clientList)
                 {
-                    message = $"Friend: {data}";
-                    byte[] buffer = Encoding.UTF8.GetBytes(message);
-                    stream.Write(buffer, 0, buffer.Length);
+                    NetworkStream stream = client.GetStream();
+                    if (client != currentClient)
+                    {
+                        message = $"Friend: {data}";
+                        byte[] buffer = Encoding.UTF8.GetBytes(message);
+                        stream.Write(buffer, 0, buffer.Length);
+                    }
                 }
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Client Disconnected.");
             }
         }
     }
