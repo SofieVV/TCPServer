@@ -57,6 +57,7 @@ namespace MyTCPListener
                     int counter = stream.Read(bytes, 0, bytes.Length);
                     if (counter == 0)
                     {
+                        Console.WriteLine("Client Disconnected.");
                         clientList.Remove(client);
                         break;
                     }
@@ -77,12 +78,13 @@ namespace MyTCPListener
 
             try
             {
-            var rudePeople = clientList.Where(c => c.Connected == false);
+                var rudePeople = clientList.Where(c => c.Connected == false);
 
-            foreach (var rudeClient in rudePeople)
-            {
-                clientList.Remove(rudeClient);
-            }
+                foreach (var rudeClient in rudePeople)
+                {
+                    clientList.Remove(rudeClient);
+                }
+
                 foreach (TcpClient client in clientList)
                 {
                     NetworkStream stream = client.GetStream();
@@ -96,7 +98,7 @@ namespace MyTCPListener
             }
             catch(Exception)
             {
-                Console.WriteLine("Client Disconnected.");
+                Console.WriteLine("No other clients...");
             }
         }
     }
