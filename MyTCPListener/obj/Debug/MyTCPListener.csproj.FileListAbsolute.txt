@@ -4,4 +4,3 @@ C:\Users\Sofi\source\repos\TCPServer\MyTCPListener\bin\Debug\MyTCPListener.pdb
 C:\Users\Sofi\source\repos\TCPServer\MyTCPListener\obj\Debug\MyTCPListener.csproj.CoreCompileInputs.cache
 C:\Users\Sofi\source\repos\TCPServer\MyTCPListener\obj\Debug\MyTCPListener.exe
 C:\Users\Sofi\source\repos\TCPServer\MyTCPListener\obj\Debug\MyTCPListener.pdb
-C:\Users\Sofi\source\repos\TCPServer\MyTCPListener\obj\Debug\MyTCPListener.csprojResolveAssemblyReference.cache

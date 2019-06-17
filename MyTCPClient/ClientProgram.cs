@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyTCPClient
 {
-    class Program
+    class ClientProgram
     {
         private static int port = 1020;
 

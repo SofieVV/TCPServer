@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MyTCPListener
 {
-    class Program
+    class ServerProgram
     {
         private static TcpListener server = null;
         private static List<TcpClient> clientList = new List<TcpClient>();
@@ -77,16 +77,15 @@ namespace MyTCPListener
         public static void BroadCast(string data, TcpClient currentClient)
         {
             string message;
-            
-                foreach (TcpClient client in clientList)
+
+            foreach (TcpClient client in clientList)
+            {
+                NetworkStream stream = client.GetStream();
+                if (client != currentClient)
                 {
-                    NetworkStream stream = client.GetStream();
-                    if (client != currentClient)
-                    {
-                        message = $"Friend: {data}";
-                        byte[] buffer = Encoding.UTF8.GetBytes(message);
-                        stream.Write(buffer, 0, buffer.Length);
-                    }
+                    message = $"Friend: {data}";
+                    byte[] buffer = Encoding.UTF8.GetBytes(message);
+                    stream.Write(buffer, 0, buffer.Length);
                 }
             }
         }
